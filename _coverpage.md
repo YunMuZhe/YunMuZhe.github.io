@@ -1,11 +1,8 @@
-![logo](./img/logo.jpg)
-
-# Coding Z
+![logo](./img/logo.png)
 
 > Welcome to my site!
 
-* HFUT
-* Program Project
+* Studing in HFUT
 
-[GitHub](https://github.com/docsifyjs/docsify/)
+[MyGitHub](https://github.com/engineringForYou/)
 [Get Started](#_1新课-hive-数据仓库)
