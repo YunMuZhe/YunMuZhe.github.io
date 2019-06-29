@@ -5,4 +5,4 @@
 * Studing in HFUT
 
 [MyGitHub](https://github.com/engineringForYou/)
-[Get Started](#_1新课-hive-数据仓库)
+[Get Started](/?id=您好，欢迎来到我的博客)

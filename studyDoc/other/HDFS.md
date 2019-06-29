@@ -111,15 +111,3 @@ org.apache.hadoop.security.AccessControlException: Permission denied: user=Admin
 3. 在学习阶段可以关闭HDFS的权限认证
 
 
-
-
-
-
-
-
-
-
-
-
-
-·

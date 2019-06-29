@@ -1,5 +1,5 @@
-* [首页](/README)
-* [june_twentySeven](tedu_notes/june_twentySeven)
-* [Eclipse配置HDFS开发环境](tedu_notes/Eclipse配置HDFS开发环境)
-* [june_twenty--HDFS](tedu_notes/june_twenty--HDFS)
-* [june_twentyOne--Map](tedu_notes/june_twentyOne--Map)
+* [首页](/)
+* [LeetCode](/leetCode/1-10)
+* 笔记
+  * [搭建及配置文档](/studyDoc/profileDoc/)
+  * [else](/studyDoc/other/)
