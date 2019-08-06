@@ -11,6 +11,11 @@
 </head>
 <body>
   <div id="app">Please wait...</div>
+  <div id="clustrmaps" style="position:relative; 
+  width:10px; 
+  height:10px; 
+  left:0px; 
+  bottom:0px"></div>
   <script>
     window.$docsify = {
 		loadSidebar: true,
@@ -28,11 +33,13 @@
 		formatUpdated: '{MM}/{DD} {HH}:{mm}',
 		
     }
+	
   </script>
   <script src="//unpkg.com/docsify/lib/docsify.min.js"></script>
   <script src="//unpkg.com/docsify-copy-code"></script>
   <script src="//unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script>
   <script src="//unpkg.com/prismjs/components/prism-java.js"></script>
+  <script src="./js/myjs.js"></script>
   <script type="text/javascript" id="clustrmaps" src="//cdn.clustrmaps.com/map_v2.js?d=wucTNz2FOmagGnngvZkDFkZsdUnXye9AS-lREcr5I_0&cl=ffffff&w=a"></script>
 </body>
 </html>
