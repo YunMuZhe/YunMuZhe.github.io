@@ -1,2 +1,2 @@
-* [Java](/prepareInterview/Java)
-* [数据结构](/prepareInterview/数据结构)
+* [Java Basics](/prepareInterview/Java)
+* [Data Structure](/prepareInterview/DataStructure)

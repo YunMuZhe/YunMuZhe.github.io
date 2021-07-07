@@ -1,2 +1,6 @@
-* [首页](/)
+* [Home](/)
 * [LeetCode](/leetCode/1-10)
+* [Algorithm](/algorithm/sort)
+* [Study Note](/prepareinterview/Java)
+  * [Java Basics](/prepareInterview/Java)
+  * [Data Structure](/prepareinterview/DataStructure)

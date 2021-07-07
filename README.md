@@ -1,7 +1,5 @@
 
 
- 您好，欢迎来到我的博客
+ Welcome to my blog.
 
- 如有建议，欢迎交流。
-
-Email：1194792327@qq.com
+ You can Email to me if you want to communication or have some suggestion: 1194792327@qq.com
