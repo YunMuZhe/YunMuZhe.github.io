@@ -4,3 +4,4 @@
 * [Study Note](/prepareinterview/Java)
   * [Java Basics](/prepareInterview/Java)
   * [Data Structure](/prepareinterview/DataStructure)
+  * [Redis](/prepareInterview/Redis)
