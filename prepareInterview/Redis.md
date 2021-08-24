@@ -1,5 +1,56 @@
 # Redis
 
+## Redis的基础使用
+
+### String
+
+```shell
+get key value # 获取键值
+set key value # 设置键值
+del key # 删除键
+```
+
+### List
+
+```shell
+RPUSH key element [...element] # 将给定值推入列表的右端
+LPUSH key element [...element] # 将给定值推入列表的左端
+LRANGE key start end # 获取列表从start下标到end下标的所有数据
+LPOP/RPOP # 从列表的左端/右端弹出一个值
+LINDEX key index # 获取列表位于index位置的值
+```
+
+### Set
+
+```shell
+SADD key element [...element] # 将给定值加入到集合中
+SREM key  element [...element] # 将给定值从集合中删除
+SISMEMBER key  element [...element] # 判断给定值是否在集合中
+SMEMBERS key # 获取集合中所有元素，会引起阻塞，生产环境慎用
+SINTER/SUNION/SDIFF key1 key2 # 对集合1和集合2取交集、并集、差集
+```
+
+### Hash
+
+```shell
+HSET key field value # 将给定value插入到key的hash表中，以field为key
+HGET key field # 获得key的hash表中field的value
+HGETALL key # 获取key的hash表中的所有field、value键值对
+HDEL key field # 在key的hash表中删除指定的field
+```
+
+### ZSet
+
+```shell
+ZADD key score member [... score member] # 将给定的member和score加入到zset中
+ZRANGE key start end # 从zset中获取排序后的index在start到end的所有值
+ZRANGEBYSCORE key startScore endScore # 从zset中获取score在startScore到endScore的所有值
+ZREM key member # 如果zset中有这个值，则移除0
+ZINCRBY key score mebmer # 为zset中member的score新增一个值
+```
+
+
+
 ## Redis单线程为什么这么快
 
 Redis 将数据储存在内存里面，读写数据的时候都不会受到硬盘 I/O 速度的限制，所以速度极快
@@ -43,8 +94,7 @@ Redis 将数据储存在内存里面，读写数据的时候都不会受到硬�
 - ​	save m n：在m秒内，如果有n个键发生改变，则自动触发持久化，通过bgsave执行，**如果设置多个，只要满足其一就会触发**，配置文件有默认配置（可以注释掉）。
 - ​	flushall：用于清空redis所有的数据库；而flushdb命令清空当前redis所在库数据（默认是0号数据库），这两个命令都会清空RDB文件，同时也会生成dump.rdb，内容为空。
 - ​	主从同步：全量同步时会自动触发bgsave命令，生成rbd发送给从节点。
-
-
+- 当服务器收到shutdown命令或者收到term信号时，会执行save命令，阻塞所有客户端，不再执行客户端的任何命令，并在save命令执行完毕之后关闭服务器。
 
 #### 优点
 
@@ -57,6 +107,10 @@ Redis 将数据储存在内存里面，读写数据的时候都不会受到硬�
 
 1. 数据安全性低，RDB是间隔一段时间进行持久化，如果持久化之间redis发生故障，会发生数据丢失的风险，所以这种方式更适合数据要求不严谨的时候
 2. 由于RDB是通过fork子进程来协助完成数据持久化工作的，因此，如果当数据集比较大时，可能会导致整个服务器停止服务几百毫秒，甚至到1s。并且fork出来的子进程会占用CPU。
+
+#### 修复工具
+
+redis-check-dump
 
 ### AOP（Append Only File）：
 
@@ -91,6 +145,10 @@ Redis 将数据储存在内存里面，读写数据的时候都不会受到硬�
 - AOF比RDB更安全也更大
 - RDB性能比AOF好
 - 如果两种持久化方案都配置了，则会默认使用AOF机制
+
+#### 修复工具
+
+redis-check-aof
 
 ## Redis的过期键的删除策略
 
@@ -251,11 +309,7 @@ Redis Sharding是Redis Cluster出来之前，业界普遍使用的多Redis实例
 
 客户端sharding不支持动态增删节点。服务端Redis实例群拓扑结构有变化时，每个客户端都需要更新调整。连接不能共享，当应用规模增大时，资源浪费制约优化。
 
-
-
 **对于这三种模式，如果Redis要存的数据量不大，可以选择哨兵模式，如果Redis要存的数据量大，并且需要持续的扩容，那么可以选择cluster模式。**
-
-
 
 ## Redis主从复制的核心原理
 
@@ -301,10 +355,6 @@ Redis Sharding是Redis Cluster出来之前，业界普遍使用的多Redis实例
 - 误判率，即存在假阳性（False Position），不能准确判断元素是否在集合中。hash函数需要足够好，降低hash碰撞的概率
 - 不能获取元素本身
 - 一般情况下不能从布隆过滤器中删除元素，只能增不能减(可以通过维护count来删除)
-
-
-
-
 
 ## 什么是缓存穿透、缓存击穿、缓存雪崩，怎样解决？
 
@@ -376,21 +426,3 @@ Redis Sharding是Redis Cluster出来之前，业界普遍使用的多Redis实例
    - UNWATCH命令可以取消watch对所有key的监控。
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-- 缓存奔溃
-
-- 缓存降级
-
-- 使用缓存的合理性问题
