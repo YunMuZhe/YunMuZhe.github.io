@@ -135,13 +135,12 @@ Topic类型的Exchange与Direct相比，都是可以根据RoutingKey把消息路
 
 ![直连模式](./img/MQWorkPattern5.png)
 
-# 
-	统配符
-		* (star) can substitute for exactly one word.    匹配不多不少恰好1个词
-		# (hash) can substitute for zero or more words.  匹配零个、一个或多个词
-	如:
-		audit.#    匹配audit、audit.irs 、或者audit.irs.corporate等
-		audit.*   只能匹配 audit.irs
+> 通配符
+> 		* (star) can substitute for exactly one word.    匹配不多不少恰好1个词
+> 		# (hash) can substitute for zero or more words.  匹配零个、一个或多个词
+> 	如:
+> 		audit.#    匹配audit、audit.irs 、或者audit.irs.corporate等
+> 		audit.*   只能匹配 audit.irs
 
 ## 面试问题
 
@@ -348,7 +347,7 @@ kafka实际上有个offset的概念，每个消息写进去的时候都会有一
 
    - 打开事务：生产者发送数据之前打开rabbitmq事务（channel.txSelect)，然后发送消息，如果消息发送失败，生成者会受到异常报错，此时可以回滚事务（channel.txRollback)，然后重试发送消息；如果收到了消息，那可以提交事务(channel.txCommit)。但是问题是事务会影响性能，吞吐量会降低。
 
-   - 开启confirm模式（回调机制）：在生产者那里开启confirm模式之后，每次写的消息都会分配一个唯一的id，如果写入了rabbitmq中，则会回传一个ack消息，告诉你这个消息ok了，如果rabbitmq没能处理这个消息，则会回调一个nack接口，告诉你这个消息接受失败，然后可以重试。而且你可以结合这个机制自己在内存里维护每个消息 id 的状态，如果超过一定时间还没接收到这个消息的回调，那么你可以重发。
+   - 开启confirm模式（回调机制）：在生产者那里开启confirm模式之后，每次写的消息都会分配一个唯一的id，如果写入了rabbitmq中，则会回传一个ack消息，告诉你这个消息ok了，如果rabbitmq没能处理这个消息，则会回调一个nack接口，告诉你这个消息接收失败，然后可以重试。而且你可以结合这个机制自己在内存里维护每个消息 id 的状态，如果超过一定时间还没接收到这个消息的回调，那么你可以重发。
 
    事务机制和 `confirm` 机制最大的不同在于，**事务机制是同步的**，你提交一个事务之后会**阻塞**在那儿，但是 `confirm` 机制是**异步**的，你发送个消息之后就可以发送下一个消息，然后那个消息 RabbitMQ 接收了之后会异步回调你的一个接口通知你这个消息接收到了。
 
@@ -415,7 +414,7 @@ kafka实际上有个offset的概念，每个消息写进去的时候都会有一
 
 2. kafka：一个topic，一个partition，一个consumer，内部单线程消费，写入N个内存queue，然后N个线程分别消费一个内存queue即可。
 
-![image-20210825093957320](C:\Users\11947\AppData\Roaming\Typora\typora-user-images\image-20210825093957320.png)
+![](./img/message/mq-application3.png)
 
 kafka保证写入到一个partition中的数据一定是有顺序的。生产者在写的时候，可以制定一个key，比如你指定某个订单id作为key，这个订单相关的数据一定会被分发到一个partition中，而且这个partition中的数据一定是有顺序的。
 
