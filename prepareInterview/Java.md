@@ -754,17 +754,82 @@ monitorenter和monitorexit是使用CAS操作加锁和释放锁的，开销比较
 
 所以对这种线程持有锁时间很短的情况下，是可以采取忙等待的策略的，也就是一个线程没竞争到锁时，进入一个while循环不停的等待，不会暂停不会发生线程上下文切换，等到机会获取锁就继续执行。
 
-## 
+## ThreadLocal
 
+### 结构
 
+Thread中保存有如下一个变量：
 
+```java
+ThreadLocal.ThreadLocalMap threadLocals = null;
+```
 
+ThreadLocal内部存有此类的定义：
 
+```java
+// hash桶
+private Entry[] table;
+// 容量大小，必须为2的幂次倍
+private static final int INITIAL_CAPACITY = 16;
+// 当前存了多少值
+private int size = 0;
+// 下次要变成的长度
+private int threshold; // Default to 0
+```
 
+Entry的定义：
 
+```java
+static class Entry extends WeakReference<ThreadLocal<?>> {
+    /** The value associated with this ThreadLocal. */
+    Object value;
 
+    Entry(ThreadLocal<?> k, Object v) {
+        super(k);
+        value = v;
+    }
+}
+```
 
+### 使用步骤
 
+**set时**
+
+查看当前Thread的threadLocals变量是否初始化完成：
+
+- 没有的话就直接调用creatMap来初始化一个桶
+- 否则直接获取到这个桶然后放进去即可。
+
+**get时**
+
+查看当前Thread的threadLocals变量是否初始化完成：
+
+- 没有的话，直接初始化一个桶，然后放进去一个null
+- 有的话直接将其取出来就好了
+
+一个Thread可以有多个不同的ThreadLocal，这些ThreadLocal公用一个ThreadLocalMap，这个ThreadLocalMap使用ThreadLocal为key，其保存的值为value。
+
+每次使用完必须要用remove方法将其释放，如果Thread对象长时间不被回收（比如是线程池里面的核心线程），那就会造成内存泄漏。
+
+## 线程的状态
+
+> 参考文章：https://blog.csdn.net/shi2huang/article/details/80289155
+
+![线程的状态轮转图](./img/thread-condition.png)
+
+### sleep()、wait()和yield()的区别
+
+#### 1 区别
+
+在`java`中，`sleep()`和`yield()`方法是`Thread`类中的方法，而`wait()`是`Object`类中的方法。也就是说，在java中，所有的类都有`wait()`方法，而只有继承了`Thread`类的方法才有`sleep()`和`yield()`方法。
+
+| 功能           | sleep                                        | yield                                                        | wait                         |
+| -------------- | -------------------------------------------- | ------------------------------------------------------------ | ---------------------------- |
+| 含义           | 睡眠指定时间，到时重新进入Runnable等待被调度 | 出让CPU，直接进入Runnable状态与其他线程竞争，可以让优先级相等或更高的任务执行 | 等待同步资源                 |
+| 哪个类中的方法 | Thread                                       | Thread                                                       | Object                       |
+| 是否会释放锁   | 不会                                         | 不会                                                         | 会                           |
+| 唤醒方式       | 指定时间                                     | 不会睡眠和阻塞，直接进入Runnable                             | 调用notify(all)方法          |
+| 使用位置       | 任意位置均可                                 | 任意位置均可                                                 | 只能用在synchronized代码块里 |
 
 
 

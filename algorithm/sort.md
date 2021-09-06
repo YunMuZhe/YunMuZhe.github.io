@@ -282,9 +282,6 @@ public class Sort {
 			return ;
 		}
 		int start = left, end = right;
-		if(left == -1) {
-			System.out.println(right);
-		}
 		int tmp = nums[left];
 		while(start < end) {
 			while(nums[end] >= tmp && end > start) {
