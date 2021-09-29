@@ -4,3 +4,7 @@
 * [Redis](/prepareInterview/Redis)
 * [RabbitMQ](/prepareInterview/RabbitMq)
 * [ES](/prepareInterview/ES)
+* [Linux](/prepareInterview/Linux)
+* [Mysql](/prepareInterview/Mysql)
+* [Spring](/prepareInterview/Spring)
+* [计算机网络](/prepareInterview/计算机网络)

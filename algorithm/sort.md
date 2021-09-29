@@ -268,7 +268,8 @@ public class Sort {
 		if(nums == null || nums.length < 2) {
 			return ;
 		}
-		fastSortHelper(nums, 0, nums.length-1);
+		
+(nums, 0, nums.length-1);
 	}
 
 	/**

@@ -87,7 +87,7 @@ ZINCRBY key score mebmer # 为zset中member的score新增一个值
 
 String底层使用了SDS（simple dynamic string）简单动态字符串，其结构包括：
 
-- free：int，标识当前SDS还要多少未使用的长度
+- free：int，标识当前SDS还有多少未使用的长度
 - len：int，标识当前SDS已保存字符串的长度
 - buf：char[], 存放当前字符串
 
@@ -368,7 +368,7 @@ redis内部使用文件事件处理器（file event handler），这个文件事
 ![](./img/redis/1.png)
 
 1. redis服务端进行服务初始化时，会将server Socket的AE_READABLE事件与连接应答处理器相关联。
-2. 客户端连接时是向server Socket发送请求，此时server Socket会产生一个AE_READABLE事件，IO多路复用程序监听到server socket产生了事件，就会将server socket压入队列中。
+2. 客户端连接时向server Socket发送请求，此时server Socket会产生一个AE_READABLE事件，IO多路复用程序监听到server socket产生了事件，就会将server socket压入队列中。
 3. 文件事件分派器从队列中获取socket，交给连接应答处理器。
 4. 连接应答处理器会创建一个能与客户端通信的socket01，并将该socket01的AE_READABLE事件与命令请求处理器相连接。
 5. 建立连接后，如果客户端发送一条命令，比如set key value命令，此时redis中的socket01会产生AE_READABLE事件，IO多路复用程序将socket01压入队列，事件分派器从队列中取出socket01，发现它的AE_READABLE事件是与命令请求处理器相关联的，于是事件分派器会将这个事件交给命令请求处理器来处理。
@@ -470,7 +470,7 @@ redis持久化的意义在于故障恢复，如果单单是把数据放在内存
 
 redis-check-dump
 
-### AOP（Append Only File）：
+### AOF（Append Only File）：
 
 以日志的形式记录服务器所处理的每一个写、删除操作，查询操作不会记录，以文本的方式记录，可以打开文件看到详细的操作记录，调操作系统命令进程刷盘
 
@@ -1196,7 +1196,7 @@ slave不会过期key，只会等待master过期key，如果master过期了一个
 #### 解决方案
 
 1. 设置这个热点缓存永不过期。这时要注意在value当中（存储的对象中）包含一个逻辑上的过期时间，另起一个线程，定期重建这些缓存
-2. 加载DB的时候，要防止并发。将缓存加载到redis当中时，加一个锁，只能让一个进程去写入缓存。
+2. 加载DB的时候防止并发。将缓存加载到redis当中时，加一个锁，只能让一个进程去写入缓存。
 
 ### 缓存雪崩
 
