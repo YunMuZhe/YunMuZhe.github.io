@@ -1,5 +1,6 @@
 * [Java Basics](/prepareInterview/Java)
 * [Data Structure](/prepareInterview/DataStructure)
+* [RPC](/prepareInterview/Distribute)
 * [IO Model](/prepareInterview/IO)
 * [Redis](/prepareInterview/Redis)
 * [RabbitMQ](/prepareInterview/RabbitMq)
