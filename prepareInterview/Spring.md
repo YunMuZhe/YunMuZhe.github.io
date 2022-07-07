@@ -165,7 +165,7 @@ public class CglibProxy implements MethodInterceptor {
 
  （1）JDK动态代理只能对实现了接口的类生成代理，而不能针对没有实现接口的类
  （2）CGLIB是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法
-  因为是继承，所以该类或方法最好不要声明成final 
+  因为是继承，所以该类或方法最好不要声明成final
 
 ## 说说Spring中的Bean是不是线程安全的
 
@@ -450,3 +450,6 @@ Hystrix为每个依赖调用分配一个小的线程池，**如果线程池已�
    漏桶算法其实很简单，可以粗略的认为就是注水漏水过程，往桶中以一定速率流出水，以任意速率流入水，当水超过桶流量则丢弃，因为桶容量是不变的，保证了整体的速率。
 
    ![](./img/spring/request-limit-loutong.png)
+
+# spring MVC 请求处理流程
+![](./img/spring/DispatcherServlet.png)
