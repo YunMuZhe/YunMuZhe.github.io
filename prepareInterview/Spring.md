@@ -285,6 +285,41 @@ spring默认来说，对每个bean走的都是一个单例模式，确保每个�
 
 如果要对一些类的方法切入一些增强的代码，会创建一些动态代理的对象，让你对那些目标对象的访问，先经过动态代理对象，动态代理对象先做一些增强的代码，调用你的目标对象。
 
+### 装饰者模式
+
+Wrapper	BeanWrapper
+
+在spring中的体现：Spring 中用到的包装器模式在类名上有两种表现：一种是类名中含有 Wrapper， 另一种是类名中含有Decorator。 基本上都是动态地给一个对象添加一些额外的职责。
+
+1）Spring配置 DataSource：
+
+Spring 中配置 DataSource 的时候，这些dataSource可能是各种不同类型的，比如不同的数据库：`Oracle、SQL Server、MySQL`等，也可能是不同的数据源：比如`apache` 提供的`org.apache.commons.dbcp.BasicDataSource`、spring提供的`org.springframework.jndi.JndiObjectFactoryBean`等。
+
+这时，能否在尽可能少修改原有类代码下的情况下，做到动态切换不同的数据源？此时就可以用到装饰者模式。
+
+Spring根据每次请求的不同，将dataSource属性设置成不同的数据源，以到达切换数据源的目的。
+
+### 委派模式
+
+Dispatcher	DispatcherServlet
+
+### 策略模式
+
+Handler	HandlerMapping
+
+### 适配器模式
+
+Adapter	HandlerAdpter
+
+### 模板模式
+
+Template	JdbcTemplate
+
+### 观察者模式
+
+Listener	ContextLoaderListener
+
+
 ## Mybatis二级缓存机制
 
 ### 一级缓存
