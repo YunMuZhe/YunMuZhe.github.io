@@ -1144,7 +1144,10 @@ monitorenter和monitorexit是使用CAS操作加锁和释放锁的，开销比较
 无锁态(01) -> 偏向锁(01) -> 轻量级锁(自旋锁)(00) --(自旋 > 10次 / 自旋线程数 > CPU核数/2, 1.6之后，加上了自适应自旋，JVM自己控制，也就是自适应自旋)--> 重量级锁(内核态级别的锁)(10)
 
 
-
+# Java版本发布路线
+> 参考链接: https://www.oracle.com/java/technologies/java-se-support-roadmap.html
+![](img/java/javaVersion.png)
+![](img/java/javaVersion2.png)
 
 
 
