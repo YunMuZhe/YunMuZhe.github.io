@@ -176,6 +176,8 @@ Hessian 的对象序列化机制有 8 种原始类型：
 
 ## Dubbo支持哪些负载均衡、高可用以及动态代理的策略？
 
+> dubbo API文档：https://dubbo.apache.org/zh/docs3-v2/java-sdk/reference-manual/config/properties/
+
 ### 负载均衡策略
 
 1. random loadbalance（默认）
