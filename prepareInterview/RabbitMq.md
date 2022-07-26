@@ -496,11 +496,14 @@ kafka保证写入到一个partition中的数据一定是有顺序的。生产者
 如果面试官问道了，就一个个答过去，如果没问到，可以自己小秀一把，把上面的这些东西都说出来。
 
 
+[Apache RocketMQ开发者指南](https://github.com/apache/rocketmq/tree/master/docs/cn)
 # TODO：RocketMQ的延时队列的原理简单介绍一下
+[延迟队列](https://blog.csdn.net/weixin_38361347/article/details/119706637)
 # TODO：如果延时队列的消息发送失败了，RocketMQ会怎么处理呢？
 
-
-
+# RabbitMQ的死信队列原理
+[RabbitMQ死信队列](https://blog.csdn.net/weixin_44688301/article/details/116237294)
+# RocketMQ发送一条消息过去之后，是如何定位到对应的Broker上面的
 
 
 
