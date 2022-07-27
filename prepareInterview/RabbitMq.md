@@ -536,7 +536,8 @@ kafka保证写入到一个partition中的数据一定是有顺序的。生产者
 ![](./img/mq/delayQueue.png)
 
 
-# 如果延时队列的消息发送失败了，RocketMQ会怎么处理呢？
+# 如果队列的消息消费失败了，RocketMQ会怎么处理呢？
+> 参考文档：[关于RocketMQ之消息重试简述](https://blog.csdn.net/ysds20211402/article/details/124569910)
 
 对于所有消费者消费失败的消息，rocketMQ都会把重试的消息 重新new出来（即上文提到的MessageExtBrokerInner对象），然后投递到主题SCHEDULE_TOPIC_XXXX 下的队列中，然后由定时任务进行调度重试。
 
@@ -560,7 +561,8 @@ RocketMQ的工作流程：
 5. Consumer与Producer类似，启动后先跟其中一台 Nameserver建立长连接,获取本机所订阅 Topic的路由信息,然后根据算法策略从路由信息中获取到其所要消费的queue,然后直接跟 Broker建立长连接,开始消费其中的消息。 Consumer在获取到路由信息后,同样也会每30秒从 Name Server更新一次路由信息。不过不同于Producer的是,Consumer还会向 Broker发送心跳,以确保 Broker的存活状态。
 > 参考文档：[RocketMQ学习：Broker](https://www.cnblogs.com/panxianhao/p/15656538.html)
 
-
+# TODO：RocketMQ顺序消费原理
+![RocketMQ实现顺序消息原理分析](https://blog.csdn.net/Octopus21/article/details/116949961)
 
 
 
