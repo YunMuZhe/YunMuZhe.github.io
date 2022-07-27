@@ -496,16 +496,69 @@ kafka保证写入到一个partition中的数据一定是有顺序的。生产者
 如果面试官问道了，就一个个答过去，如果没问到，可以自己小秀一把，把上面的这些东西都说出来。
 
 
-[Apache RocketMQ开发者指南](https://github.com/apache/rocketmq/tree/master/docs/cn)
-# TODO：RocketMQ的延时队列的原理简单介绍一下
-[延迟队列](https://blog.csdn.net/weixin_38361347/article/details/119706637)
-# TODO：如果延时队列的消息发送失败了，RocketMQ会怎么处理呢？
-
 # RabbitMQ的死信队列原理
 [RabbitMQ死信队列](https://blog.csdn.net/weixin_44688301/article/details/116237294)
+> 概念解读：
+> 
+> “死信”是RabbitMQ中的一种消息机制，当你在消费消息时，如果队列里的消息出现以下情况：
+> 1. 消息被否定确认，使用 channel.basicNack 或 channel.basicReject ，并且此时requeue 属性被设置为false。
+> 2. 消息在队列的存活时间超过设置的生存时间（TTL)时间。
+> 3. 消息队列的消息数量已经超过最大队列长度。
+> 那么该消息将成为“死信”。
+> 
+> “死信”消息会被RabbitMQ进行特殊处理，如果配置了死信队列信息，那么该消息将会被**丢进死信队列中**，如果没有配置，则该消息将会被**丢弃**。
+
+**死信消息的生命周期：**
+1. 业务消息被投入业务队列
+2. 消费者消费业务队列的消息，由于处理过程中发生异常，于是进行了nck或者reject操作
+3. 被nck或reject的消息由RabbitMQ投递到死信交换机中
+4. 死信交换机将消息投入相应的死信队列
+5. 死信队列的消费者消费死信消息
+
+
+
+[Apache RocketMQ开发者指南](https://github.com/apache/rocketmq/tree/master/docs/cn)
+# RocketMQ的延时队列的原理简单介绍一下
+[延迟队列](https://blog.csdn.net/weixin_38361347/article/details/119706637)
+## 概念
+消息发送到某个队列后，在指定多长时间之后才能被消费。
+
+## 时间配置
+**broker**有配置项messageDelayLevel，默认值为“1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h”, 共18个level。
+1. broker配置messageDelayLevel
+2. 发消息时，设置delayLevel
+> level有以下三种情况：
+> 
+> level == 0，消息为非延迟消息1<=level<=maxLevel，消息延迟特定时间，例如level1，延迟1s
+> 
+> level > maxLevel，则level maxLevel，例如level==20，延迟2h
+## 原理
+![](./img/mq/delayQueue.png)
+
+
+# 如果延时队列的消息发送失败了，RocketMQ会怎么处理呢？
+
+对于所有消费者消费失败的消息，rocketMQ都会把重试的消息 重新new出来（即上文提到的MessageExtBrokerInner对象），然后投递到主题SCHEDULE_TOPIC_XXXX 下的队列中，然后由定时任务进行调度重试。
+
+而重试的周期符合我们在上文中提到的delayLevel周期，也就是：
+`private String messageDelayLevel = "1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h";`
+
+如果发现消费失败，则一开始会初始化为原有延时等级+3，然后继续放到对应的延时队列里面后续重试。
+
+当重试次数达到最大时，会将消息投送给死信队列，死信 topic 为：`%DLQ%+consumerGroup`。
+
+可开发对应的死信队列消费者进行异常消息处理，如重新投递、报警等操作。
+
+
+
 # RocketMQ发送一条消息过去之后，是如何定位到对应的Broker上面的
-
-
+RocketMQ的工作流程：
+1. 启动NameServer，启动后会监听端口，等待Producer、Consumer、Broker连接
+2. 启动Broker时，Broker会与所有的NameServer建立连接，而且每30s会发送一次心跳包
+3. 发送消息前可以先创建Topic，创建Topic时可以指定该Topic要存储在哪个Broker上面，而且创建Topic时，Broker和Topic的关系也会同步写入到NameServer上中。是否指定Broker是可选的，也可以在发送消息时自动创建Topic。
+4. Producer发送消息前先会与NameServer中的一个实例创建长连接并从NameServer处获取路由信息，即当前要发送的Topic的queue及Broker的地址映射关系。然后根据算法策略从中选出一个Queue来，并与队列的Broker建立长连接然后发消息到Broker。PS：获取路由信息后，Producer会先将路由信息缓存到本地，而且每30s会从NameServer处更新路由信息。
+5. Consumer与Producer类似，启动后先跟其中一台 Nameserver建立长连接,获取本机所订阅 Topic的路由信息,然后根据算法策略从路由信息中获取到其所要消费的queue,然后直接跟 Broker建立长连接,开始消费其中的消息。 Consumer在获取到路由信息后,同样也会每30秒从 Name Server更新一次路由信息。不过不同于Producer的是,Consumer还会向 Broker发送心跳,以确保 Broker的存活状态。
+> 参考文档：[RocketMQ学习：Broker](https://www.cnblogs.com/panxianhao/p/15656538.html)
 
 
 
