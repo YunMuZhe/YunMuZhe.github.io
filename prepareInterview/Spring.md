@@ -576,5 +576,44 @@ Hystrix为每个依赖调用分配一个小的线程池，**如果线程池已�
 # spring MVC 请求处理流程
 ![](./img/spring/DispatcherServlet.png)
 
+# 为什么 Spring和IDEA 都不推荐使用 @Autowired 注解
+**1. 基于属性注入的方式, 违背单一职责原则**
 
+因为现在的业务一般都会使用很多依赖, 但拥有太多的依赖通常意味着承担更多的责任,而这显然违背了单一职责原则.
+并且类和依赖容器强耦合，不能在容器外使用。
 
+**2. 基于属性注入的方式, 容易导致Spring 初始化失败**
+
+因为现在在Spring特别是Spring Boot使用中, 经常会因为初始化的时候, 由于属性在被注入前就引用而导致npe(空指针错误)，进而导致容器初始化失败(类似下面代码块). Java 在初始化一个类时是按照 静态变量或静态语句块 –> 实例变量或初始化语句块 –> 构造方法 -> @Autowired 的顺序。所以在执行这个类的构造方法时，person 对象尚未被注入，它的值还是 null。
+```java
+   @Autowired
+   private Person person;
+
+   private String company;
+
+   public UserServiceImpl(){
+      this.company = person.getCompany();
+   }
+```
+**3. @Autowired是通过 ByType 注入的, 因此有可能会出现两个相同类型的bean进而导致Spring 装配失败**
+
+## 为什么推荐使用@Resource,不推荐使用@Autowired
+通过对上一个问题的梳理, 我们可以知道：
+
+@Autowired 注解在Bean 注入的时候是基于ByType的, **因此会由于注入两个相同类型的Bean导致装配失败**
+
+而@Resource的作用相当于@Autowired，只不过@Autowired按照byType自动注入。
+
+如果我们想使用按照名称byName来装配，可以结合@Qualifier注解一起使用。
+
+**@Resource装配顺序：**
+
+1. 如果同时指定了name和type，则从Spring上下文中找到唯一匹配的bean进行装配，找不到则抛出异常。
+2. 如果指定了name，则从上下文中查找名称（id）匹配的bean进行装配，找不到则抛出异常。
+3. 如果指定了type，则从上下文中找到类型匹配的唯一bean进行装配，找不到或是找到多个，都会抛出异常。
+4. 如果既没有指定name，又没有指定type，则自动按照byName方式进行装配；如果没有匹配，则回退为一个原始类型进行匹配，如果匹配则自动装配。
+
+## @Autowired, @Qualifier, @Resource, 三者有何区别
+- @Autowired: 通过byType 方式进行装配, 找不到或是找到多个，都会抛出异常。
+- @Qualifier: 如果想让@Autowired 注入的Bean进行 byName装配, 可以使用 @Qualifier 进行指定
+- @Resource :作用相当于@Autowired，只不过 @Resource 默认按照byName方式装配, 如果没有匹配, 则退回到 byType 方式进行装配
