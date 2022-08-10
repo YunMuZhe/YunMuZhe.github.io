@@ -822,6 +822,8 @@ ScheduledThreadPoolExcutor: new ThreadExcutor(corePoolSize, Integer.MAX_VALUE, 0
 
 在 java.util.concurrent 包中，提供了 ThreadPoolExecutor 的实现。
 
+### 线程池核心参数含义
+
 ```java
 public ThreadPoolExecutor(int corePoolSize,
 	int maximumPoolSize,
@@ -833,7 +835,6 @@ public ThreadPoolExecutor(int corePoolSize,
 } 
 ```
 
-### 线程池核心参数含义
 
 **corePoolSize**- 核心线程数大小，既然如前原理部分所述。需要注意的是在初创建线程池时线程不会立即启动，直到有任务提交才开始启动线程并逐渐时线程数目达到corePoolSize。若想一开始就创建所有核心线程需调用prestartAllCoreThreads方法。
 
