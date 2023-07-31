@@ -4,6 +4,7 @@
 * [Algorithm](/algorithm/sort)
 * [Study Note](/prepareinterview/Java)
   * [Java Basics](/prepareInterview/Java)
+  * [Java Basics2](/prepareInterview/JAVA2)
   * [Data Structure](/prepareinterview/DataStructure)
   * [IO Model](/prepareInterview/IO)
   * [Redis](/prepareInterview/Redis)
